@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Mac Nvidia Web Driver Notice</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      list-style-type: none;
+    }
+
+    .main {
+      padding: 30px;
+    }
+
+    table.gridtable {
+      width: 100%;
+      font-family: verdana, arial, sans-serif;
+      font-size: 11px;
+      color: #333333;
+      border-width: 1px;
+      border-color: #666666;
+      border-collapse: collapse;
+    }
+
+    table.gridtable th {
+      border-width: 1px;
+      padding: 8px;
+      border-style: solid;
+      border-color: #666666;
+      background-color: #dedede;
+    }
+
+    table.gridtable td {
+      border-width: 1px;
+      padding: 8px;
+      border-style: solid;
+      border-color: #666666;
+      background-color: #ffffff;
+    }
+
+    .loading {
+      margin-top: 100px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 300px;
+      height: 300px;
+      background-color: #20293a;
+      color: #20293a;
+      border-radius: 50%;
+      font-weight: bold;
+      line-height: 1.5;
+      text-align: center;
+      animation: text 10s ease infinite;
+    }
+
+    .loading:after {
+      position: absolute;
+      content: "";
+      top: -5%;
+      left: -5%;
+      right: 0;
+      z-index: -1;
+      height: 100%;
+      width: 100%;
+      margin: 0 auto;
+      transform: scale(0.85);
+      filter: blur(5vw);
+      background: linear-gradient(270deg, #00fcbd, #7400f9);
+      background-size: 150% 150%;
+      border-radius: 50%;
+      animation: glowmation 10s linear infinite;
+    }
+
+    @keyframes glowmation {
+      0% {
+        top: -3%;
+        left: -3%;
+        background-position: 0% 50%;
+        background-size: 150% 150%;
+      }
+
+      12.5% {
+        top: -3%;
+        left: 0;
+        background-size: 70% 30%;
+      }
+
+      25% {
+        top: -3%;
+        left: 3%;
+        background-size: 100% 50%;
+      }
+
+      37.5% {
+        top: 0;
+        left: 3%;
+        background-size: 70% 30%;
+      }
+
+      50% {
+        top: 3%;
+        left: 3%;
+        background-position: 100% 50%;
+        background-size: 30% 30%;
+      }
+
+      62.5% {
+        top: 3%;
+        left: 0;
+        background-size: 30% 70%;
+      }
+
+      75% {
+        top: 3%;
+        left: -3%;
+        background-size: 50% 100%;
+      }
+
+      87.5% {
+        top: 0;
+        left: -3%;
+        background-size: 30% 70%;
+      }
+
+      100% {
+        top: -3%;
+        left: -3%;
+        background-position: 0% 50%;
+        background-size: 150% 150%;
+      }
+    }
+
+    @keyframes text {
+      0% {
+        color: #7400f9;
+      }
+
+      50% {
+        color: #00fcbd;
+      }
+
+      100% {
+        color: #7400f9;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="main">
+    <h1>Mac Nvidia Web Driver Notice</h1>
+    <small>Note: This webpage is a representation of NVIDIA's Apple Updater <a href="https://gfe.nvidia.com/mac-update"
+        target="_blank">source</a>, so will always be current.</small>
+    <p style="padding: 10px 0; margin-bottom: 30px;">More about OS: <a href="https://www.tonymacx86.com/nvidia-drivers/"
+        target="_blank">https://www.tonymacx86.com/nvidia-drivers/</a></p>
+    <h2>Subscription macOS Mojave 10.14 (18A391) update</h2>
+    <form id="form">
+      <p>Email: <input type="email" name="email" /> <strong>Or</strong> Phone: <input type="tel" name="phone" /></p>
+      <input type="hidden" name="version" value="18A391" />
+      <input style="margin-top: 10px" id="submit" type="button" value="Submit" />
+    </form>
+    <div style="overflow: auto; margin-top: 60px;">
+      <h2>Download List</h2>
+      <table id="dataTable" class="gridtable"></table>
+    </div>
+    <div class="loading">LOADING DOWNLOAD LIST...</div>
+  </div>
+  <script src="//lib.baomitu.com/jquery/3.3.1/jquery.js"></script>
+  <script src="common.js"></script>
+</body>
+
+</html>
