@@ -68,15 +68,31 @@ if (Request::post('version') != null) {
         exit;
     }
 
-    $has = $database->has('user', [
-        'AND' => [
-            'OR' => [
-                'email' => Request::post('email'),
-                'phone' => Request::post('phone'),
+    if (!empty(Request::post('email')) && !empty(Request::post('phone'))) {
+        $has = $database->has('user', [
+            'AND' => [
+                'OR' => [
+                    'email' => Request::post('email'),
+                    'phone' => Request::post('phone'),
+                ],
+                'version' => Request::post('version'),
             ],
-            'version' => Request::post('version'),
-        ],
-    ]);
+        ]);
+    } else if (!empty(Request::post('email'))) {
+        $has = $database->has('user', [
+            'AND' => [
+                'email' => Request::post('email'),
+                'version' => Request::post('version'),
+            ],
+        ]);
+    } else if (!empty(Request::post('phone'))) {
+        $has = $database->has('user', [
+            'AND' => [
+                'phone' => Request::post('phone'),
+                'version' => Request::post('version'),
+            ],
+        ]);
+    }
 
     if ($has) {
         $row = $database->update('user', [
@@ -93,6 +109,10 @@ if (Request::post('version') != null) {
             ],
         ]);
 
+        if (!empty(Request::post('phone'))) {
+            // TODO:
+        }
+
         echo json_encode([
             'status' => 2,
             'row' => $row->rowCount(),
@@ -106,10 +126,17 @@ if (Request::post('version') != null) {
             'update_time' => date('Y-m-d H:i:s'),
         ]);
 
-        echo json_encode([
-            'status' => 1,
-            'id' => $database->id(),
-        ]);
+        if (!empty(Request::post('phone'))) {
+            echo json_encode([
+                'status' => 4,
+                'id' => $database->id(),
+            ]);
+        } else {
+            echo json_encode([
+                'status' => 1,
+                'id' => $database->id(),
+            ]);
+        }
     }
 } else {
     $datas = $database->select('user', '*', [

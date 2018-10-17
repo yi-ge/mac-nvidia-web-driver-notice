@@ -150,6 +150,27 @@
         color: #7400f9;
       }
     }
+
+    #myModel {
+        position: absolute;
+        top: 0;
+        left: 0;
+        display: none;
+        background-color: rgba(9, 9, 9, 0.63);
+        width: 100%;
+        height: 100%;
+        z-index: 1000;
+    }
+
+    .model-content {
+        width: 50%;
+        text-align: center;
+        background: #ffffff;
+        border-radius: 6px;
+        margin: 100px auto;
+        line-height: 30px;
+        z-index: 10001;
+    }
   </style>
 </head>
 
@@ -171,6 +192,17 @@
       <table id="dataTable" class="gridtable"></table>
     </div>
     <div class="loading">LOADING DOWNLOAD LIST...</div>
+  </div>
+  <div id="myModel">
+    <div class="model-content">
+        <p>信息已记录，本项目不盈利，短信通知收取成本费 <strong>0.5￥/次</strong> ，感谢理解。</p>
+        <p>支付成功后请勿关闭该窗口，支付结果将实时显示。</p>
+        <!-- <p><input type="text" id="total_fee" value="0.5" disabled/></p> -->
+        <p id="qrcore"></p>
+        <p>
+            <button id="closeModel" style="padding: 2px 4px;">Close</button>
+        </p>
+    </div>
   </div>
   <script src="//lib.baomitu.com/jquery/3.3.1/jquery.js"></script>
   <script src="common.js"></script>
