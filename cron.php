@@ -22,16 +22,14 @@ function getNewContent()
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); // 信任任何证书
     curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2); // 检查证书中是否设置域名
     $output = curl_exec($ch);
-
-    if ($output === false) {
-        echo json_encode([
-            'err' => 'The Nvidia server is not responding:' . curl_error($ch),
-        ]);
-    }
-
     curl_close($ch);
-    $xml = simplexml_load_string($output);
-    return json_encode($xml);
+
+    if ($output !== false) {
+        $xml = simplexml_load_string($output);
+        return json_encode($xml);
+    } else {
+        return getNewContent();
+    }
 }
 
 $datas = $database->select('data', 'content', [
