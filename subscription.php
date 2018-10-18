@@ -1,41 +1,13 @@
 
 <?php
+error_reporting(0);
+require_once 'config.php';
 require_once 'Medoo.php';
 
 // Using Medoo namespace
 use Medoo\Medoo;
 
-$database = new Medoo([
-    // required
-    'database_type' => 'mysql',
-    'database_name' => 'macNvidiaWebDriverNotice',
-    'server' => 'localhost',
-    'username' => 'root',
-    'password' => '123456',
-
-    // [optional]
-    'charset' => 'utf8',
-    'port' => 3306,
-
-    // [optional] Table prefix
-    'prefix' => 'notice_',
-
-    // [optional] Enable logging (Logging is disabled by default for better performance)
-    'logging' => true,
-
-    // // [optional] MySQL socket (shouldn't be used with server and port)
-    // 'socket' => '/tmp/mysql.sock',
-
-    // // [optional] driver_option for connection, read more from http://www.php.net/manual/en/pdo.setattribute.php
-    // 'option' => [
-    //     PDO::ATTR_CASE => PDO::CASE_NATURAL,
-    // ],
-
-    // // [optional] Medoo will execute those commands after connected to the database for initialization
-    // 'command' => [
-    //     'SET SQL_MODE=ANSI_QUOTES',
-    // ],
-]);
+$database = new Medoo($DBCONFIG);
 
 header('Access-Control-Allow-Headers: x-requested-with, content-type, X-Requested-With, Content-Type');
 header('Content-Type: application/json; charset=utf-8');
@@ -68,15 +40,31 @@ if (Request::post('version') != null) {
         exit;
     }
 
-    $has = $database->has('user', [
-        'AND' => [
-            'OR' => [
-                'email' => Request::post('email'),
-                'phone' => Request::post('phone'),
+    if (!empty(Request::post('email')) && !empty(Request::post('phone'))) {
+        $has = $database->has('user', [
+            'AND' => [
+                'OR' => [
+                    'email' => Request::post('email'),
+                    'phone' => Request::post('phone'),
+                ],
+                'version' => Request::post('version'),
             ],
-            'version' => Request::post('version'),
-        ],
-    ]);
+        ]);
+    } else if (!empty(Request::post('email'))) {
+        $has = $database->has('user', [
+            'AND' => [
+                'email' => Request::post('email'),
+                'version' => Request::post('version'),
+            ],
+        ]);
+    } else if (!empty(Request::post('phone'))) {
+        $has = $database->has('user', [
+            'AND' => [
+                'phone' => Request::post('phone'),
+                'version' => Request::post('version'),
+            ],
+        ]);
+    }
 
     if ($has) {
         $row = $database->update('user', [
@@ -93,6 +81,33 @@ if (Request::post('version') != null) {
             ],
         ]);
 
+        if (!empty(Request::post('phone'))) {
+            $phone = $database->select('user', 'id', [
+                'phone' => Request::post('phone'),
+            ]);
+
+            $theId = $phone[0];
+
+            if ($theId) {
+                $database->insert('order', [
+                    'out_trade_no' => '1020180520' . $theId,
+                ]);
+
+                echo json_encode([
+                    'status' => 4,
+                    'row' => $row->rowCount(),
+                    'id' => $theId,
+                ]);
+                exit;
+            } else {
+                echo json_encode([
+                    'status' => 5,
+                    'row' => $row->rowCount(),
+                ]);
+                exit;
+            }
+        }
+
         echo json_encode([
             'status' => 2,
             'row' => $row->rowCount(),
@@ -106,10 +121,22 @@ if (Request::post('version') != null) {
             'update_time' => date('Y-m-d H:i:s'),
         ]);
 
-        echo json_encode([
-            'status' => 1,
-            'id' => $database->id(),
-        ]);
+        if (!empty(Request::post('phone'))) {
+            $theId = $database->id();
+            $database->insert('order', [
+                'out_trade_no' => '1020180520' . $theId,
+            ]);
+
+            echo json_encode([
+                'status' => 4,
+                'id' => $theId,
+            ]);
+        } else {
+            echo json_encode([
+                'status' => 1,
+                'id' => $database->id(),
+            ]);
+        }
     }
 } else {
     $datas = $database->select('user', '*', [

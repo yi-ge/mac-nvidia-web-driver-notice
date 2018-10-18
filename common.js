@@ -108,26 +108,69 @@ $(document).ready(function () {
   })
 
   $('#submit').click(function () {
-    $.ajax({
-      type: 'POST',
-      url: 'subscription.php',
-      contentType: 'application/json; charset=utf-8',
-      data: JSON.stringify($('#form').serializeObject()),
-      dataType: 'json',
-      success: function (data) {
-        if (data.status === 1) {
-          alert('Got you, good luck!')
-        } else if (data.status === 2) {
-          alert("Don't worry, the information of your has been updated.")
-        } else if (data.status === 3) {
-          alert('Please enter at least one field.')
-        } else {
-          alert('Error, Please try again.')
+    if ($('#submit').val() !== 'waiting...') {
+      $('#submit').val('waiting...')
+      $.ajax({
+        type: 'POST',
+        url: 'subscription.php',
+        contentType: 'application/json; charset=utf-8',
+        data: JSON.stringify($('#form').serializeObject()),
+        dataType: 'json',
+        success: function (data) {
+          if (data.status === 1) {
+            alert('Got you, good luck!')
+            $('#submit').val('Submit')
+          } else if (data.status === 2) {
+            alert("Don't worry, the information of your has been updated.")
+            $('#submit').val('Submit')
+          } else if (data.status === 3) {
+            alert('Please enter at least one field.')
+            $('#submit').val('Submit')
+          } else if (data.status === 4) {
+            $.get('wxpay.php?body=Driver Notice&out_trade_no=1020180520' + data.id + '&total_fee=50').done(function (val) {
+              $('#qrcore').html('<img src="' + val.qrcode + '" >')
+              setTimeout(function () {
+                document.getElementById('myModel').style.display = 'block';
+                $('#submit').val('Submit')
+                var interval = setInterval(function () {
+                  $.get('check.php?out_trade_no=1020180520' + data.id).done(function (padInfo) {
+                    if (padInfo.status === 1) {
+                      $('#qrcore').html('<h2 style="color: red;">支付成功，感谢您的支持！</h2>')
+                      $('#pay-tip').hide()
+                      clearInterval(interval)
+                    }
+                  })
+                }, 500)
+              }, 400)
+            }).fail(function (jqXHR, textStatus, errorThrown) {
+              if (textStatus === 'timeout') {
+                console.log('The server is not responding')
+                alert('Please refresh and try again.')
+                $('#submit').val('Submit')
+                return
+              }
+          
+              if (textStatus === 'error') {
+                console.log(errorThrown)
+              }
+          
+              alert('The server is not responding')
+              $('#submit').val('Submit')
+            })
+          } else {
+            $('#submit').val('Submit')
+            alert('Error, Please try again.')
+          }
+        },
+        error: function () {
+          alert('Network error, Please try again.')
+          $('#submit').val('Submit')
         }
-      },
-      error: function () {
-        alert('Network error, Please try again.')
-      }
-    })
+      })
+    }
+  })
+
+  $('#closeModel').click(function (){
+    document.getElementById('myModel').style.display = 'none';
   })
 })
