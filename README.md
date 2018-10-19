@@ -9,3 +9,8 @@
 **PHP 5.4+ MySQL 5.1+**
 
 修改`config.php`文件即可。使用[`PAYJS`](https://payjs.cn/ref/DPEBRZ)作为个人微信支付接口。
+
+首次启动请手工访问cron.php开启后台监控，后续用户访问首页将自动检查后台运行是否正常。
+
+<p style="width: 100%;text-align: center;">捐赠</p>
+<p style="width: 100%;text-align: center;"><img src="donate.png" /></p>

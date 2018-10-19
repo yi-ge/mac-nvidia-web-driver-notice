@@ -107,6 +107,16 @@ $(document).ready(function () {
     alert('The server is not responding')
   })
 
+  $.get('last-update.php').done(function (data) {
+    var val = data.r
+    $('#update-time').text(val)
+    var date = new Date(val)
+    if (new Date().getTime() - date.getTime() > 30000) {
+      console.log('数据过旧，重启cron')
+      $.get('cron.php')
+    }
+  })
+
   $('#submit').click(function () {
     if ($('#submit').val() !== 'waiting...') {
       $('#submit').val('waiting...')
@@ -130,12 +140,12 @@ $(document).ready(function () {
             $.get('wxpay.php?body=Driver Notice&out_trade_no=1020180520' + data.id + '&total_fee=50').done(function (val) {
               $('#qrcore').html('<img src="' + val.qrcode + '" >')
               setTimeout(function () {
-                document.getElementById('myModel').style.display = 'block';
+                document.getElementById('myModel').style.display = 'block'
                 $('#submit').val('Submit')
                 var interval = setInterval(function () {
                   $.get('check.php?out_trade_no=1020180520' + data.id).done(function (padInfo) {
                     if (padInfo.status === 1) {
-                      $('#qrcore').html('<h2 style="color: red;">支付成功，感谢您的支持！</h2>')
+                      $('#qrcore').html('<h2 style="color: red;">支付成功，感谢您的支持！请静候佳音。</h2>')
                       $('#pay-tip').hide()
                       clearInterval(interval)
                     }
@@ -149,11 +159,11 @@ $(document).ready(function () {
                 $('#submit').val('Submit')
                 return
               }
-          
+
               if (textStatus === 'error') {
                 console.log(errorThrown)
               }
-          
+
               alert('The server is not responding')
               $('#submit').val('Submit')
             })
@@ -170,7 +180,7 @@ $(document).ready(function () {
     }
   })
 
-  $('#closeModel').click(function (){
-    document.getElementById('myModel').style.display = 'none';
+  $('#closeModel').click(function () {
+    document.getElementById('myModel').style.display = 'none'
   })
 })

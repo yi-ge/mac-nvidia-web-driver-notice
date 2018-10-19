@@ -32,3 +32,11 @@ $DBCONFIG = [
     //     'SET SQL_MODE=ANSI_QUOTES',
     // ],
 ];
+
+$emailAppid = '';
+$emailProject = '';
+$emailSignature = '';
+
+$smsAppid = '';
+$smsProject = '';
+$smsSignature = '';
