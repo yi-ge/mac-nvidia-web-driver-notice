@@ -138,10 +138,4 @@ if (Request::post('version') != null) {
             ]);
         }
     }
-} else {
-    $datas = $database->select('user', '*', [
-        'ORDER' => ['create_time' => 'DESC'],
-    ]);
-
-    echo json_encode($datas);
 }
