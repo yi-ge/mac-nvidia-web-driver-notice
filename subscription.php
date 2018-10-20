@@ -43,10 +43,8 @@ if (Request::post('version') != null) {
     if (!empty(Request::post('email')) && !empty(Request::post('phone'))) {
         $has = $database->has('user', [
             'AND' => [
-                'OR' => [
-                    'email' => Request::post('email'),
-                    'phone' => Request::post('phone'),
-                ],
+                'email' => Request::post('email'),
+                'phone' => Request::post('phone'),
                 'version' => Request::post('version'),
             ],
         ]);
@@ -67,19 +65,41 @@ if (Request::post('version') != null) {
     }
 
     if ($has) {
-        $row = $database->update('user', [
-            'email' => Request::post('email'),
-            'phone' => Request::post('phone'),
-            'update_time' => date('Y-m-d H:i:s'),
-        ], [
-            'AND' => [
-                'OR' => [
+        if (!empty(Request::post('email')) && !empty(Request::post('phone'))) {
+            $row = $database->update('user', [
+                'email' => Request::post('email'),
+                'phone' => Request::post('phone'),
+                'update_time' => date('Y-m-d H:i:s'),
+            ], [
+                'AND' => [
                     'email' => Request::post('email'),
                     'phone' => Request::post('phone'),
+                    'version' => Request::post('version'),
                 ],
-                'version' => Request::post('version'),
-            ],
-        ]);
+            ]);
+        } else if (!empty(Request::post('email'))) {
+            $row = $database->update('user', [
+                'email' => Request::post('email'),
+                'phone' => Request::post('phone'),
+                'update_time' => date('Y-m-d H:i:s'),
+            ], [
+                'AND' => [
+                    'email' => Request::post('email'),
+                    'version' => Request::post('version'),
+                ],
+            ]);
+        } else if (!empty(Request::post('phone'))) {
+            $row = $database->update('user', [
+                'email' => Request::post('email'),
+                'phone' => Request::post('phone'),
+                'update_time' => date('Y-m-d H:i:s'),
+            ], [
+                'AND' => [
+                    'phone' => Request::post('phone'),
+                    'version' => Request::post('version'),
+                ],
+            ]);
+        }
 
         if (!empty(Request::post('phone'))) {
             $phone = $database->select('user', 'id', [
