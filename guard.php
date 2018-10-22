@@ -25,6 +25,9 @@ date_default_timezone_set('Asia/Shanghai');
 
 while (1) {
     // start
+    $file_pointer = fopen('log.txt', 'w');
+    fwrite($file_pointer, date('Y-m-d H:i:s'));
+    fclose($file_pointer);
     if (time() - strtotime(getNewContent()) > 30) {
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, 'https://driver.wyr.me/cron.php');
