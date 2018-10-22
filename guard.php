@@ -37,5 +37,5 @@ while (1) {
         curl_close($ch);
     }
     // end
-    sleep($time);
+    sleep(20);
 }
