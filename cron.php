@@ -71,7 +71,7 @@ while (1) {
         if ($datas[0] != $content && $content != 'false' && $content != false) {
             $tmp = json_decode($content, true);
             try {
-                if ($tmp['dict']['array']['dict'][0]['string'][4] != '17G65') {
+                if ($tmp['dict']['array']['dict'][0]['string'][4] != '17G3025') {
                     $database->insert('data', [
                         'content' => $content,
                         'update_time' => date('Y-m-d H:i:s'),
